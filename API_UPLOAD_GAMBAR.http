@@ -1,0 +1,75 @@
+### Upload Gambar Test Request
+POST http://coffee.test/api/upload-gambar
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: Bearer YOUR_TOKEN
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="_token"
+
+CSRF_TOKEN_HERE
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="gambar"; filename="espresso.jpg"
+Content-Type: image/jpeg
+
+[BINARY IMAGE DATA]
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+### Curl Testing Command
+curl -X POST \
+  -H "X-CSRF-TOKEN: YOUR_CSRF_TOKEN" \
+  -F "gambar=@/path/to/image.jpg" \
+  http://coffee.test/api/upload-gambar
+
+###
+
+### JavaScript Fetch Example
+const formData = new FormData();
+formData.append('gambar', fileInput.files[0]);
+formData.append('_token', document.querySelector('[name="_token"]').value);
+
+fetch('/api/upload-gambar', {
+  method: 'POST',
+  body: formData
+})
+.then(response => response.json())
+.then(data => console.log(data));
+
+###
+
+### PHP cURL Example
+<?php
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'http://coffee.test/api/upload-gambar');
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, [
+    'gambar' => new CURLFile('/path/to/image.jpg'),
+    '_token' => csrf_token()
+]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$data = json_decode($response, true);
+curl_close($ch);
+
+var_dump($data);
+?>
+
+###
+
+### Expected Response (Success)
+{
+  "success": true,
+  "message": "Gambar berhasil diupload",
+  "gambar_path": "img/espresso_1705340850.jpg",
+  "gambar_url": "http://coffee.test/img/espresso_1705340850.jpg"
+}
+
+###
+
+### Expected Response (Error)
+{
+  "success": false,
+  "message": "Gagal mengupload gambar: File size exceeds maximum of 2MB"
+}
