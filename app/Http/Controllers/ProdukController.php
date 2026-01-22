@@ -145,6 +145,7 @@ class ProdukController extends Controller
         ];
         return $icons[$kategori] ?? 'fa-box';
     }
+
     public function index($kategori = null)
     {
         if ($kategori) {
